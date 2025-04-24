@@ -1,9 +1,11 @@
 streamlit
 torch
-ultralytics
+ultralytics==8.0.20
+opencv-python-headless
 pillow
 pandas
 numpy
 scikit-learn
 gTTS
 SpeechRecognition
+
