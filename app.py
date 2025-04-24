@@ -8,8 +8,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import speech_recognition as sr
 
-# — Helpers —
-
 def text_to_speech(text):
     from gtts import gTTS
     import tempfile
@@ -26,7 +24,7 @@ def generate_grocery_list(ingredients_str):
     items = [i.strip() for i in ingredients_str.split(',')]
     return sorted(set(items))
 
-# — Load model & data —
+# Load model & data 
 
 model = YOLO('ingredient_model.pt')
 CONF_THRESHOLD = 0.25
@@ -38,7 +36,7 @@ df['recipe_type']   = df['recipe_type'].astype(str).str.lower()
 tfidf        = TfidfVectorizer(token_pattern=r"(?u)\b\w+\b")
 tfidf_matrix = tfidf.fit_transform(df['ingredients'].tolist())
 
-# — Detection & Recommendation —
+# Detection & Recommendation 
 
 def detect_ingredients_yolo(img: Image.Image):
     results = model(img)
@@ -63,7 +61,7 @@ def recommend_recipes(detected, recipe_type=None, top_n=50):
     top = scores.nlargest(top_n, 'score')
     return df.loc[top['idx']].assign(similarity=top['score'].values)
 
-# — Sidebar: BMI Calculator —
+# Sidebar
 
 st.sidebar.title("🏥 Health & Shopping")
 
@@ -81,7 +79,7 @@ if st.sidebar.button("Compute BMI"):
     else:
         st.sidebar.error("Enter valid height")
 
-# — Main App —
+# Main App 
 st.title("🍲 Ingredient Detection & Recipe Recommendations 🍽️")
 st.write("Choose an input method, then provide ingredients!")
 
@@ -138,7 +136,7 @@ elif mode == 'speak':
 else:
     st.info("Select an input method above.")
 
-# Image-based detection (same)
+# Image-based detection 
 if 'img' in locals():
     st.image(img, use_container_width=True)
     st.write("Detecting ingredients…")
@@ -151,7 +149,7 @@ if 'img' in locals():
         st.write("No ingredients found.")
         last_detected = []
 
-# If an image was provided, run detection
+# Detection
 if 'img' in locals():
     st.image(img, use_container_width=True)
     st.write("Detecting ingredients…")
@@ -220,7 +218,7 @@ if 'last_detected' in locals() and last_detected:
 # Sidebar: Grocery List Generator
 if not recs.empty:
     st.sidebar.header("🛒 Grocery List Generator")
-    opts   = ["— none —"] + recs['title'].tolist()
+    opts = ["— none —"] + recs['title'].tolist()
     chosen = st.sidebar.selectbox("Select a recommended recipe", opts)
     if st.sidebar.button("Generate Grocery List"):
         if chosen != "— none —":
@@ -229,3 +227,4 @@ if not recs.empty:
                 st.sidebar.write(f"- {item}")
         else:
             st.sidebar.warning("Please select a recipe first.")
+
