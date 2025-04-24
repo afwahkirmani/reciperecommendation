@@ -1,0 +1,9 @@
+streamlit
+torch
+ultralytics
+pillow
+pandas
+numpy
+scikit-learn
+gTTS
+SpeechRecognition
